@@ -8,10 +8,26 @@ function SignIn() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("Identifiants saisis :", username, password)
-    }
+
+        try {
+            const response = await fetch("http://localhost:3001/api/v1/user/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", },
+                body: JSON.stringify({ email: username, password: password, })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Connexion réussie ! Voici le Token :", data.body.token);
+            } else {
+                console.error("Erreur de connexion");
+            }
+        } catch (error) {
+            console.error("Erreur réseau :", error);
+        }
+    };
 
     return (
         <main className="main bg-dark">
@@ -35,7 +51,7 @@ function SignIn() {
                             id="password"
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
-                            />
+                        />
                     </div>
                     <div className="input-remember">
                         <input type="checkbox" id="remember-me" />
