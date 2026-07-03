@@ -1,12 +1,16 @@
 import React from 'react';
 import { useState } from 'react';
-// import './SignIn.scss';
+import { loginSuccess } from '../redux/authSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 
 function SignIn() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -20,7 +24,9 @@ function SignIn() {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Connexion réussie ! Voici le Token :", data.body.token);
+                const token = data.body.token;
+                dispatch(loginSuccess(token));
+                navigate('/profile');
             } else {
                 console.error("Erreur de connexion");
             }
