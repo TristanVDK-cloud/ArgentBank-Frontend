@@ -7,6 +7,7 @@ const authSlice = createSlice({
         isAuthenticated: false,
         firstName: null,
         lastName: null,
+        userName: null,
 
     },
     reducers: {
@@ -21,6 +22,7 @@ const authSlice = createSlice({
         setProfile: (state, action) => {
             state.firstName = action.payload.firstName;
             state.lastName = action.payload.lastName;
+            state.userName = action.payload.userName;
         },
     },
 });

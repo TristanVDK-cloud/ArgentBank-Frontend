@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Account from '../components/Account';
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from '../redux/authSlice';
@@ -10,6 +10,9 @@ function User() {
     const token = useSelector((state) => state.auth.token);
     const firstName = useSelector((state) => state.auth.firstName);
     const lastName = useSelector((state) => state.auth.lastName);
+    const userName = useSelector((state) => state.auth.userName);
+    const [isEditing, setIsEditing] = useState(false);
+    const [newUserName, setNewUserName] = useState('');
 
     useEffect(() => {
 
@@ -35,13 +38,79 @@ function User() {
         }
     }, [token]);
 
+    const handleSave = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch("http://localhost:3001/api/v1/user/profile", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    userName: newUserName,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                dispatch(setProfile(data.body));
+                setIsEditing(false);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour du profil :", error);
+        }
+    };
+
     return (
         <main className="main bg-dark">
             <div className="header">
-                <h1>Welcome Back<br />{firstName} {lastName}!</h1>
-                <button className="edit-button">Edit Name</button>
-            </div>
+                {isEditing ? (
+                    <div className="edit-user-info">
+                        <h1>Edit user info</h1>
+                        <form onSubmit={handleSave}>
+                            <div className='input-wrapper-edit'>
+                                <label htmlFor="username">User Name:</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    placeholder={userName}
+                                    onChange={(e) => setNewUserName(e.target.value)}
+                                />
+                            </div>
+                            <div className="input-wrapper-edit">
+                                <label htmlFor="firstname">First name:</label>
+                                <input
+                                    type="text"
+                                    id="firstname"
+                                    value={firstName}
+                                    disabled
+                                />
+                            </div>
+                            <div className="input-wrapper-edit">
+                                <label htmlFor="lastname">Last name:</label>
+                                <input
+                                    type="text"
+                                    id="lastname"
+                                    value={lastName}
+                                    disabled
+                                />
+                            </div>
+                            <div className="edit-buttons">
+                                <button type="submit" className="edit-button">Save</button>
+                                <button type="button" className="edit-button" onClick={() => setIsEditing(false)}>Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                ) : (
+                    <>
+                        <h1>Welcome Back<br />{firstName} {lastName}!</h1>
+                        <button className="edit-button" onClick={() => setIsEditing(true)}>Edit Name</button>
+                    </>
+                )}
 
+            </div>
             <h2 className="sr-only">Accounts</h2>
             <Account
                 title="Argent Bank Checking (x8349)"
