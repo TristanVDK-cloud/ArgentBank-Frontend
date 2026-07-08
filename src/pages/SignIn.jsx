@@ -9,11 +9,14 @@ function SignIn() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setErrorMessage('');
 
         try {
             const response = await fetch("http://localhost:3001/api/v1/user/login", {
@@ -25,13 +28,22 @@ function SignIn() {
             if (response.ok) {
                 const data = await response.json();
                 const token = data.body.token;
+
+                if (rememberMe) {
+                    localStorage.setItem('token', token);
+                } else {
+                    sessionStorage.setItem('token', token)
+                }
+
                 dispatch(loginSuccess(token));
                 navigate('/profile');
+
             } else {
-                console.error("Erreur de connexion");
+                setErrorMessage('Invalid username or password');
             }
+
         } catch (error) {
-            console.error("Erreur réseau :", error);
+            setErrorMessage('Server error, please try again later');
         }
     };
 
@@ -60,9 +72,15 @@ function SignIn() {
                         />
                     </div>
                     <div className="input-remember">
-                        <input type="checkbox" id="remember-me" />
+                        <input
+                            type="checkbox"
+                            id="remember-me"
+                            checked={rememberMe}
+                            onChange={() => setRememberMe(!rememberMe)}
+                        />
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
+                    {errorMessage && <div className="error-message">{errorMessage}</div>}
                     <button type="submit" className="sign-in-button">Sign In</button>
                 </form>
             </section>

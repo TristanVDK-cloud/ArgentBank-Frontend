@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Account from '../components/Account';
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from '../redux/authSlice';
+import { Navigate } from 'react-router-dom';
 
 
 function User() {
@@ -13,6 +14,10 @@ function User() {
     const userName = useSelector((state) => state.auth.userName);
     const [isEditing, setIsEditing] = useState(false);
     const [newUserName, setNewUserName] = useState('');
+
+    if (!token) {
+        return <Navigate to="/login" />;
+    }
 
     useEffect(() => {
 
@@ -97,7 +102,7 @@ function User() {
                                     disabled
                                 />
                             </div>
-                            <div className="edit-buttons">
+                            <div className="edit-button">
                                 <button type="submit" className="edit-button">Save</button>
                                 <button type="button" className="edit-button" onClick={() => setIsEditing(false)}>Cancel</button>
                             </div>
