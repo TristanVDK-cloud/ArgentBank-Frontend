@@ -3,26 +3,22 @@ import Account from '../components/Account';
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from '../redux/authSlice';
 import { Navigate } from 'react-router-dom';
+import './styles/_user.scss';
 
 
 function User() {
 
     const dispatch = useDispatch();
     const token = useSelector((state) => state.auth.token);
+    const tokenInStorage = localStorage.getItem('token') || sessionStorage.getItem('token')
     const firstName = useSelector((state) => state.auth.firstName);
     const lastName = useSelector((state) => state.auth.lastName);
     const userName = useSelector((state) => state.auth.userName);
     const [isEditing, setIsEditing] = useState(false);
     const [newUserName, setNewUserName] = useState('');
 
-    if (!token) {
-        return <Navigate to="/login" />;
-    }
-
     useEffect(() => {
-
         const fetchUserProfile = async () => {
-
             try {
                 const response = await fetch("http://localhost:3001/api/v1/user/profile", {
                     method: "GET",
@@ -38,10 +34,15 @@ function User() {
                 console.error("Erreur profil:", error);
             }
         };
+
         if (token) {
             fetchUserProfile();
         }
     }, [token]);
+
+    if (!token && !tokenInStorage) {
+        return <Navigate to="/login" />;
+    }
 
     const handleSave = async (e) => {
         e.preventDefault();

@@ -1,8 +1,8 @@
 import Feature from '../components/Feature';
-import chatIcon from '../assets/icon-chat.png'
-import moneyIcon from '../assets/icon-money.png'
-import securityIcon from '../assets/icon-security.png'
-import bankTree from '../assets/bank-tree.jpeg';
+import chatIcon from '../assets/icon-chat.webp'
+import moneyIcon from '../assets/icon-money.webp'
+import securityIcon from '../assets/icon-security.webp'
+import bankTree from '../assets/bank-tree.webp';
 
 
 function Home() {

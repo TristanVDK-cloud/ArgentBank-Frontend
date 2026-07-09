@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/authSlice";
-import logo from '../../assets/argentBankLogo.png'
+import logo from '../../assets/argentBankLogo.webp'
 
 
 function Header() {
@@ -14,6 +14,8 @@ function Header() {
 
     const handleLogout = () => {
         dispatch(logout());
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         navigate('/');
     };
 

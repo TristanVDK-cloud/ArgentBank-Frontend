@@ -1,0 +1,49 @@
+.edit-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+.input-wrapper-edit {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+
+    label {
+        font-weight: bold;
+    }
+
+    input {
+        padding: 5px;
+        font-size: 1.1rem;
+        border: 1px solid #ccc;
+        width: 150px;
+
+        &:disabled {
+            background-color: #f3f3f3;
+            color: #666;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.error-message {
+    color: #ff4b4b;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
