@@ -27,7 +27,6 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<SignIn />} />
                 <Route path="/profile" element={<User />} />
-                {/* Route 404 */}
             </Routes>
             <Footer />
         </Router>
